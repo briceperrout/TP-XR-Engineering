@@ -26,7 +26,25 @@ public class AppBootstrapper : MonoBehaviour
             planets
         );
         
-        // 4. On lance la simulation à la date d'aujourd'hui !
+        // 4. On initialise à la date d'aujourd'hui
         timeModel.SetTime(DateTime.Now);
+
+        // 5. ON ACCÉLÈRE LE TEMPS ICI (50 jours s'écoulent par seconde !)
+        timeModel.SetScale(5f);
+    }
+
+    void Update()
+    {
+        // On vérifie que le modèle existe et que le temps n'est pas en pause
+        if (timeModel != null && timeModel.IsPlaying)
+        {
+            // Time.deltaTime est le temps réel écoulé depuis la dernière frame (ex: 0.016s)
+            // Multiplié par notre TimeScale (50), ça donne le nombre de jours à avancer
+            double daysToAdd = Time.deltaTime * timeModel.TimeScale;
+            
+            // On calcule la nouvelle date et on prévient le modèle !
+            DateTime newDate = timeModel.CurrentTime.AddDays(daysToAdd);
+            timeModel.SetTime(newDate);
+        }
     }
 }
